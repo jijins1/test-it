@@ -1,21 +1,21 @@
 package com.example.testit.adapter.mail;
 
-import com.example.testit.model.User;
+import com.example.testit.model.Member;
 
 public interface MailService {
 
     /**
-     * Envoie un mail à l'utilisateur avec sujet et message.
-     * @param user le destinataire
+     * Envoie un mail au membre avec sujet et message.
+     * @param member le destinataire
      * @param subject le sujet du mail
      * @param message le contenu du message
      */
-    void sendMail(User user, String subject, String message);
+    void sendMail(Member member, String subject, String message);
 
     /**
-     * Envoie le mail de cloture du ticket (héritage).
-     * @param user
+     * Envoie le mail de clôture de l'emprunt (héritage).
+     * @param member
      */
-    void sendMailCloture(User user);
+    void sendMailCloture(Member member);
 
 }

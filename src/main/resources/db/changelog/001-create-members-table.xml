@@ -6,15 +6,15 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
 
     <changeSet id="001" author="testit">
-        <createTable tableName="users">
+        <createTable tableName="members">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="user" type="varchar(255)">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="manager_id" type="uuid"/>
+            <column name="referent_id" type="uuid"/>
         </createTable>
-        <addForeignKeyConstraint baseTableName="users" baseColumnNames="manager_id" referencedTableName="users" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="members" baseColumnNames="referent_id" referencedTableName="members" referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

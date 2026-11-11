@@ -1,69 +1,81 @@
-# Test It - Application de Gestion de Tâches
+# Test It - Prêt de livres
 
-Application Spring Boot simple pour l'apprentissage des tests unitaires via une API REST de gestion de tâches.
+API REST Spring Boot (Java 25) de prêt de livres pour une bibliothèque.
+**Le code est fourni : votre travail est d'écrire les tests, ce sont eux qui vous diront si tout va bien.**
 
-## Spécifications Fonctionnelles
+## Le métier en 30 secondes
 
-### Statuts des Tâches
-Les tâches suivent ce workflow :
-- OUVERT : État initial d'une tâche
-- EN_COURS : Une tâche démarrée par un utilisateur
-- FINI : Une tâche terminée
+Un livre passe par 3 statuts : `DISPONIBLE` → `EMPRUNTE` → `RENDU`
 
-### Règles Métier
-- Un utilisateur ne peut avoir qu'une seule tâche en cours (status EN_COURS).
-- Les transitions sont soumises à des vérifications :
-  - Démarrer une tâche : seulement si status = OUVERT et l'utilisateur n'a pas d'autre tâche EN_COURS.
-  - Terminer une tâche : seulement si status = EN_COURS.
+| Action | Autorisée si | Mails envoyés |
+|---|---|---|
+| Emprunter | le livre est `DISPONIBLE` **et** le membre n'a pas déjà un livre `EMPRUNTE` | au membre |
+| Rendre | le livre est `EMPRUNTE` **et** c'est ce membre qui l'a emprunté | au membre, et à son bibliothécaire référent s'il en a un |
 
-### API Endpoints
+Sinon, le service lève une exception (`IllegalArgumentException` ou `IllegalStateException`).
 
-#### Tâches
-- `GET /tasks` : Lister toutes les tâches
-- `GET /tasks/{id}` : Obtenir une tâche par ID
-- `GET /tasks/user/{userId}` : Lister les tâches d'un utilisateur
-- `POST /tasks` : Créer une tâche (body: {title, description, userId})
-- `PUT /tasks/{id}` : Modifier une tâche
-- `DELETE /tasks/{id}` : Supprimer une tâche
+## Où est le code ?
 
-#### Transitions
-- `POST /tasks/{id}/start?userId=1` : Démarrer une tâche
-- `POST /tasks/{id}/finish?userId=1` : Terminer une tâche
-
-## Exécution
-
-Pour lancer l'application :
 ```
-./gradlew bootRun
+controller/BookController     endpoints REST
+service/BookService           règles métier (c'est le cœur du TD)
+repository/BookRepository     accès base (JPA)
+adapter/mail                  envoi de mails (fake : il écrit dans les logs)
+adapter/member                membre connecté (fake : on choisit qui avec setCurrent)
 ```
 
-L'API sera accessible sur http://localhost:8080
+## API
 
-H2 Console : http://localhost:8080/h2-console
+| Méthode | URL | Rôle |
+|---|---|---|
+| GET | `/books` | tous les livres |
+| GET | `/books/{id}` | un livre (404 si absent) |
+| GET | `/books/member/{memberId}` | livres d'un membre |
+| POST | `/books` | créer `{title, author}`, les deux obligatoires (400 sinon) |
+| PUT | `/books/{id}` | modifier (404 si absent) |
+| DELETE | `/books/{id}` | supprimer |
+| POST | `/books/{id}/borrow` | emprunter (400 si refusé) |
+| POST | `/books/{id}/return` | rendre (400 si refusé) |
 
-## TD
+## Lancer
 
-1. réaliser un test de service unitaire
-   - Tester les méthodes métier de TaskService
-   - Tester les règles de transition d'état des tâches
-   - Tester les cas d'erreur (exceptions métier)
-2. réaliser un test de repository
-   - Tester les opérations CRUD du TaskRepository
-   - Tester la persistance des données
-   - Tester les requêtes personnalisées
-3. Réaliser un test de service IT
-   - Tester l'intégration du TaskService avec les repositories
-   - Tester l'interaction avec les adapters (mail, utilisateur)
-   - Tester avec la base de données réelle
-4. Réaliser un test de controller
-   - Tester les endpoints REST du TaskController
-   - Tester la validation des requêtes
-   - Tester les réponses HTTP et la gestion des erreurs
+```
+./gradlew test      # lance vos tests
+./gradlew bootRun   # lance l'application sur http://localhost:8080
+```
 
-## Tests
-Les étudiants doivent écrire des tests unitaires pour vérifier :
-- Les règles métier (voir TaskServiceTest.java pour exemples)
-- Les transitions d'états
-- Les cas d'erreur
+Base H2 en mémoire, console sur http://localhost:8080/h2-console
 
-L'idée est de démontrer que les tests unitaires permettent de détecter rapidement les erreurs dans la logique métier.
+## Le TD
+
+Écrivez les tests dans `src/test/java/com/example/testit/`, un fichier par exercice.
+**Minimum attendu : 1 test par exercice.** Si vous avez du temps, ajoutez-en.
+
+| # | Fichier | Type | Test minimum |
+|---|---|---|---|
+| 1 | `BookServiceTest` | unitaire, tout est mocké (Mockito), sans Spring ni base | Emprunter un livre disponible : vérifiez le statut, l'emprunteur **et les mails envoyés** |
+| 2 | `BookRepositoryIT` | JPA, vraie base H2 | `findByMemberAndStatus` avec **deux membres** et plusieurs livres |
+| 3 | `BookServiceIT` | contexte Spring complet, vraie base | Emprunter puis rendre un livre, et relire le résultat |
+| 4 | `BookControllerIT` | MockMvc | Créer un livre puis l'emprunter, et vérifier les réponses |
+
+Un test qui échoue n'est pas un problème : c'est **ce que vous cherchez**. Notez ce qu'il révèle (le code ou le test ?) puis corrigez.
+
+## Bonus (si vous avez fini)
+
+Dans l'ordre que vous voulez, un test par idée :
+
+- **Cas d'erreur du service** : livre ou membre inconnu, livre déjà emprunté, membre qui a déjà un livre en cours.
+- **Retour d'un livre** : par un autre membre que l'emprunteur, et avec ou sans référent (qui doit être prévenu ?).
+- **Modifier un livre** (`PUT`) qui est déjà emprunté : que devient son statut ?
+- **Supprimer** un livre qui n'existe pas.
+- **Personne n'est connecté** et on emprunte un livre : que se passe-t-il ?
+- **Validation** : `POST /books` avec un titre ou un auteur vide.
+- **TDD** : écrivez le test d'abord, regardez-le échouer, puis corrigez le code.
+- **Fake plutôt que mock** : remplacez le mock de `MailService` par un fake qui garde les mails envoyés dans une liste.
+
+## Conseils
+
+- Nommez vos tests comme des phrases : `refuseLEmpruntSiLeLivreEstDejaEmprunte`.
+- Un test = un comportement. Structure *Given / When / Then*.
+- Un test que vous n'avez jamais vu échouer ne prouve rien : cassez volontairement le service pour vérifier qu'il devient rouge.
+- Ne testez pas vos mocks : testez une décision du code (un `if`, un calcul, un appel ou un non-appel).

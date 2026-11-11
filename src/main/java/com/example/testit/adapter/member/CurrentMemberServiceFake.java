@@ -1,33 +1,32 @@
-package com.example.testit.adapter.user;
+package com.example.testit.adapter.member;
 
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 /**
  * Implémentation fake pour simuler un système d'authentification.
- * Permet de définir un utilisateur "connecté" pour les tests ou développement local,
+ * Permet de définir un membre "connecté" pour les tests ou développement local,
  * sans nécessiter un système d'authentification réel (comme JWT ou sessions).
  */
 @Service
-public class CurrentUserServiceFake implements CurrentUserService {
+public class CurrentMemberServiceFake implements CurrentMemberService {
 
-    /** ID de l'utilisateur simulé comme étant "connecté". */
+    /** ID du membre simulé comme étant "connecté". */
     private Long current;
 
     /**
-     * Retourne l'ID de l'utilisateur actuellement simulé comme connecté.
+     * Retourne l'ID du membre actuellement simulé comme connecté.
      * @return un Optional contenant l'ID si défini, empty sinon
      */
     @Override
-    public Optional<Long> getCurrentUserId() {
+    public Optional<Long> getCurrentMemberId() {
         return Optional.ofNullable(current);
     }
-
 
     public void setCurrent(Long current) {
         this.current = current;
     }
-
 
     public Long getCurrent() {
         return current;

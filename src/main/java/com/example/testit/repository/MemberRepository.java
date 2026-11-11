@@ -1,10 +1,10 @@
 package com.example.testit.repository;
 
-import com.example.testit.model.User;
+import com.example.testit.model.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUsername(String username);
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    Member findByUsername(String username);
 }

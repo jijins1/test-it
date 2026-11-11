@@ -5,23 +5,24 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-public class User {
+public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
 
-    @OneToMany(mappedBy = "assignedUser")
-    private List<Task> tasks;
+    @OneToMany(mappedBy = "borrower")
+    private List<Book> books;
 
+    /** Bibliothécaire référent du membre, prévenu quand il rend un livre. */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id")
-    private User manager;
+    @JoinColumn(name = "referent_id")
+    private Member referent;
 
-    public User() {}
+    public Member() {}
 
-    public User(String username) {
+    public Member(String username) {
         this.username = username;
     }
 
@@ -32,9 +33,9 @@ public class User {
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
-    public List<Task> getTasks() { return tasks; }
-    public void setTasks(List<Task> tasks) { this.tasks = tasks; }
+    public List<Book> getBooks() { return books; }
+    public void setBooks(List<Book> books) { this.books = books; }
 
-    public User getManager() { return manager; }
-    public void setManager(User manager) { this.manager = manager; }
+    public Member getReferent() { return referent; }
+    public void setReferent(Member referent) { this.referent = referent; }
 }
