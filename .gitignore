@@ -22,9 +22,11 @@ bin/
 /dist/
 /nbdist/
 /.nb-gradle/
-
+        var result = bookService.borrowBook(1L, 1L);
 ### VS Code ###
 .vscode/
 
 ### Mac OS ###
 .DS_Store
+
+.gradle
