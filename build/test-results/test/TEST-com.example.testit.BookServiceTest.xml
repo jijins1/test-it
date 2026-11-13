@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.testit.BookServiceTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2026-11-13T13:47:16.106Z" hostname="4kum" time="0.7">
+  <properties/>
+  <testcase name="emprunteUnLivreDisponibleEtPrevientLeMembre()" classname="com.example.testit.BookServiceTest" time="0.689">
+    <failure message="org.mockito.exceptions.misusing.PotentialStubbingProblem: &#10;Strict stubbing argument mismatch. Please check:&#10; - this invocation of 'findByMemberAndStatus' method:&#10;    bookRepository.findByMemberAndStatus(&#10;    10L,&#10;    RENDU&#10;);&#10;    -&gt; at com.example.testit.service.BookService.borrowBook(BookService.java:63)&#10; - has following stubbing(s) with different arguments:&#10;    1. bookRepository.findByMemberAndStatus(&#10;    10L,&#10;    EMPRUNTE&#10;); stubbed with: [Returns: []]&#10;      -&gt; at com.example.testit.BookServiceTest.emprunteUnLivreDisponibleEtPrevientLeMembre(BookServiceTest.java:43)&#10;Typically, stubbing argument mismatch indicates user mistake when writing tests.&#10;Mockito fails early so that you can debug potential problem easily.&#10;However, there are legit scenarios when this exception generates false negative signal:&#10;  - stubbing the same method multiple times using 'given().will()' or 'when().then()' API&#10;    Please use 'will().given()' or 'doReturn().when()' API for stubbing.&#10;  - stubbed method is intentionally invoked with different arguments by code under test&#10;    Please use default or 'silent' JUnit Rule (equivalent of Strictness.LENIENT).&#10;For more information see javadoc for PotentialStubbingProblem class." type="org.mockito.exceptions.misusing.PotentialStubbingProblem">org.mockito.exceptions.misusing.PotentialStubbingProblem: 
+Strict stubbing argument mismatch. Please check:
+ - this invocation of 'findByMemberAndStatus' method:
+    bookRepository.findByMemberAndStatus(
+    10L,
+    RENDU
+);
+    -&gt; at com.example.testit.service.BookService.borrowBook(BookService.java:63)
+ - has following stubbing(s) with different arguments:
+    1. bookRepository.findByMemberAndStatus(
+    10L,
+    EMPRUNTE
+); stubbed with: [Returns: []]
+      -&gt; at com.example.testit.BookServiceTest.emprunteUnLivreDisponibleEtPrevientLeMembre(BookServiceTest.java:43)
+Typically, stubbing argument mismatch indicates user mistake when writing tests.
+Mockito fails early so that you can debug potential problem easily.
+However, there are legit scenarios when this exception generates false negative signal:
+  - stubbing the same method multiple times using 'given().will()' or 'when().then()' API
+    Please use 'will().given()' or 'doReturn().when()' API for stubbing.
+  - stubbed method is intentionally invoked with different arguments by code under test
+    Please use default or 'silent' JUnit Rule (equivalent of Strictness.LENIENT).
+For more information see javadoc for PotentialStubbingProblem class.
+	at com.example.testit.service.BookService.borrowBook(BookService.java:63)
+	at com.example.testit.BookServiceTest.emprunteUnLivreDisponibleEtPrevientLeMembre(BookServiceTest.java:47)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/home/mohamad/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.18.15/de6980bb799c25bb1fe9e6c434201299cb5e694e/byte-buddy-agent-1.18.15.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>
