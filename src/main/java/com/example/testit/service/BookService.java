@@ -60,13 +60,14 @@ public class BookService {
             throw new IllegalStateException("Book can only be borrowed if status is DISPONIBLE");
         }
         // Vérifier si le membre a déjà un livre EMPRUNTE
-        List<Book> ongoingLoans = bookRepository.findByMemberAndStatus(memberId, Status.RENDU);
+        List<Book> ongoingLoans = bookRepository.findByMemberAndStatus(memberId, Status.EMPRUNTE);
         if (!ongoingLoans.isEmpty()) {
             throw new IllegalStateException("Member cannot borrow more than one book at a time");
         }
         book.setStatus(Status.EMPRUNTE);
         book.setBorrower(member);
         Book saved = bookRepository.save(book);
+        mailService.sendMail(member, "Livre emprunté : ", book.getTitle() + "' Livre sans titre (si il y en a pas un titre");
         return saved;
     }
 
